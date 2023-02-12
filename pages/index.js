@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Image from 'next/image'
+import Image from "next/legacy/image";
 import styles from '../styles/Home.module.css'
 import Banner from "../components/banner/banner";
 import NavBar from "../components/nav/navbar";
@@ -20,7 +20,7 @@ export default function Home() {
             imgUrl='/static/photo.jpg'
         />
         <Card imgUrl={'/static/photo.jpg'} size={"large"} />
-        <Card imgUrl={'/static/photo.jpg'} size={"medium"} />
+        <Card  size={"medium"} />
         <Card imgUrl={'/static/photo.jpg'} size={"small"} />
     </div>
   )

@@ -1,9 +1,12 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import styles from "./card.module.css"
 import {useState} from "react";
 
 const Card = (props) => {
-    const {imgUrl = "/static/photo.jp", size = "medium"} = props;
+    const {
+        imgUrl = "https://images.unsplash.com/photo-1485846234645-a62644f84728?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1340&q=80",
+        size = "medium"
+    } = props;
 
     const [imgSrc, setImgSrc]  = useState(imgUrl);
 
@@ -15,7 +18,7 @@ const Card = (props) => {
 
     const handleOnError = () => {
         console.log("hii error");
-        setImgSrc("/static/photo.jpg");
+        setImgSrc("https://images.unsplash.com/photo-1485846234645-a62644f84728?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1340&q=80");
     };
 
     return (
