@@ -1,6 +1,9 @@
 import Image from "next/legacy/image";
 import styles from "./card.module.css"
 import {useState} from "react";
+import  cls  from "classnames"
+
+import { motion } from "framer-motion";
 
 const Card = (props) => {
     const {
@@ -22,9 +25,9 @@ const Card = (props) => {
     };
 
     return (
-        <div className={styles.container}>
+        <div>
             Card
-            <div className={classMap[size]}>
+            <motion.div className={cls(styles.imgMotionWrapper, classMap[size])} whileHover={{scale: 1.2}} >
                 <Image
                     src={imgSrc}
                     alt="image"
@@ -32,7 +35,7 @@ const Card = (props) => {
                     onError={handleOnError}
                     className={styles.cardImg}
                 />
-            </div>
+            </motion.div>
         </div>
     );
 };
