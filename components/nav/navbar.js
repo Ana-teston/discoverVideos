@@ -2,6 +2,7 @@ import styles from "./navbar.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import {useState} from "react";
+import Image from "next/image";
 
 const NavBar = (props) => {
     const {username} = props;
@@ -28,7 +29,7 @@ const NavBar = (props) => {
         <div className={styles.wrapper}>
             <a className={styles.logoLink} href={"/"}>
                 <div className={styles.logoWrapper}>
-                    Netflix
+                    <Image src={"/static/netflix.svg"} alt={"Netflix logo"} width={128} height={34}/>
                 </div>
             </a>
             <ul className={styles.navItems}>
@@ -40,6 +41,7 @@ const NavBar = (props) => {
                     <button onClick={handleShowDropdown} className={styles.usernameBtn}>
                         <p className={styles.username}>{username}</p>
                         {/** expend more icon */}
+                        <Image src={"/static/expand_more.svg"} alt={"expand dropdown icon"} width={24} height={24}/>
                     </button>
                     {showDropdown && (
                     <div className={styles.navDropdown}>

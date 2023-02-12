@@ -3,6 +3,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Banner from "../components/banner/banner";
 import NavBar from "../components/nav/navbar";
+import Card from "../components/card/card";
 
 export default function Home() {
   return (
@@ -17,8 +18,10 @@ export default function Home() {
             title='Clifford is the red dog'
             subtitle='He is a smart dog'
             imgUrl='/static/photo.jpg'
-
         />
+        <Card imgUrl={'/static/photo.jpg'} size={"large"} />
+        <Card imgUrl={'/static/photo.jpg'} size={"medium"} />
+        <Card imgUrl={'/static/photo.jpg'} size={"small"} />
     </div>
   )
 }
