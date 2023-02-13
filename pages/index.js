@@ -5,9 +5,12 @@ import NavBar from "../components/nav/navbar";
 import SectionCards from "../components/card/section-cards";
 import { getVideos } from "../lib/videos";
 
-export default function Home() {
-
-  const disneyVideos = getVideos();
+export async function getServerSideProps() {
+  const disneyVideos = await getVideos();
+  return { props: { disneyVideos }};
+}
+export default function Home({ disneyVideos }) {
+  console.log({disneyVideos});
 
   return (
     <div className={styles.container}>
