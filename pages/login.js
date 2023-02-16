@@ -1,14 +1,15 @@
+import { useState } from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+
 import styles from "../styles/Login.module.css";
-import Image from "next/legacy/image";
-import {useState} from "react";
-import {useRouter} from "next/router";
+import { magic } from "../lib/magic-client";
 
 const Login = () => {
-
-    const [userMsg, setUserMsg] = useState("");
     const [email, setEmail] = useState("");
-
+    const [userMsg, setUserMsg] = useState("");
     const router = useRouter();
     const handleOnChangeEmail = (e) => {
         setUserMsg("");
@@ -16,38 +17,52 @@ const Login = () => {
         const email = e.target.value;
         setEmail(email);
     };
-    const handleLoginWithEmail = (e) => {
+    const handleLoginWithEmail = async (e) => {
         console.log("hi button");
         e.preventDefault();
 
-        if(email) {
-            if (email === "ana@example.com") {
-                router.push("/")
-                //go to the dashboard
-                console.log('router to dashboard')
+        if (email) {
+            if (email === "anapaulateston@gmail.com") {
+                //  log in a user by their email
+                try {
+                    const didToken = await magic.auth.loginWithMagicLink({
+                        email,
+                    });
+                    console.log({ didToken });
+                } catch (error) {
+                    // Handle errors if required!
+                    console.error("Something went wrong logging in", error);
+                }
+                 router.push("/");
             } else {
-                setUserMsg("something went wrong")
+                setUserMsg("Something went wrong logging in");
             }
         } else {
-            setUserMsg("the email is not valid");
-        };
+            // show user message
+            setUserMsg("Enter a valid email address");
+        }
     };
-
     return (
         <div className={styles.container}>
             <Head>
-                <title>Netflix Sign In</title>
+                <title>Netflix SignIn</title>
             </Head>
-
-        <header className={styles.header}>
-            <div className={styles.headerWrapper}>
-                <a className={styles.logoLink} href={"/"}>
-                    <div className={styles.logoWrapper}>
-                        <Image src={"/static/netflix.svg"} alt={"Netflix logo"} width={128} height={34}/>
-                    </div>
-                </a>
-            </div>
-        </header>
+            <header className={styles.header}>
+                <div className={styles.headerWrapper}>
+                    <Link legacyBehavior className={styles.logoLink} href="/">
+                        <a>
+                            <div className={styles.logoWrapper}>
+                                <Image
+                                    src="/static/netflix.svg"
+                                    alt="Netflix logo"
+                                    width={128}
+                                    height={34}
+                                />
+                            </div>
+                        </a>
+                    </Link>
+                </div>
+            </header>
             <main className={styles.main}>
                 <div className={styles.mainWrapper}>
                     <h1 className={styles.signInHeader}>Sign In</h1>
@@ -66,5 +81,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;
