@@ -1,10 +1,13 @@
 
 import styles from './banner.module.css'
 import Image from "next/legacy/image";
+import {useRouter} from "next/router";
 const Banner = (props) => {
-    const { title, subtitle, imgUrl} = props;
-    const handleOnClick = () => {
-        console.log('handleOnClick');
+    const { title, subtitle, imgUrl, videoId} = props;
+    const router = useRouter()
+    const handleOnPlay = () => {
+        console.log('handleOnPlay');
+        router.push(`/video/${videoId}`)
     }
     return <div className={styles.container}>
         <div className={styles.leftWrapper}>
@@ -16,7 +19,7 @@ const Banner = (props) => {
                 <h2 className={styles.title}>{title}</h2>
                 <h3 className={styles.subTitle}>{subtitle}</h3>
                 <div className={styles.playBtnWrapper}>
-                    <button className={styles.btnWithIcon} onClick={handleOnClick}>
+                    <button className={styles.btnWithIcon} onClick={handleOnPlay}>
                         <Image
                             src="/static/play_arrow.svg"
                             alt="Play icon"
