@@ -30,7 +30,7 @@ export default function Home({ disneyVideos,
         <link rel="icon" href="/favicon.ico" />
       </Head>
         <div className={styles.main}>
-          <NavBar username="ana@example.com"/>
+          <NavBar />
           <Banner
               title='Clifford is the red dog'
               subtitle='He is a smart dog'

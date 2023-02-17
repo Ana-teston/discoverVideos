@@ -1,14 +1,31 @@
 import styles from "./navbar.module.css";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Image from "next/legacy/image";
+import {magic} from "../../lib/magic-client";
 
-const NavBar = (props) => {
-    const {username} = props;
-    const router = useRouter();
+const NavBar = () => {
 
     const [showDropdown, setShowDropdown] = useState();
+    const [username, setUsername] = useState("");
+
+    const router = useRouter();
+
+    useEffect(() => {
+        async function getUsername() {
+            try {
+                const { email } = await magic.user.getMetadata();
+                if (email) {
+                    console.log(email);
+                    setUsername(email);
+                }
+            } catch (error) {
+                console.log("Error retrieving email:", error);
+            }
+        }
+        getUsername();
+    }, []);
 
     const handleOnClickHome = (e) => {
         e.preventDefault();
@@ -23,6 +40,19 @@ const NavBar = (props) => {
         e.preventDefault();
         setShowDropdown(!showDropdown);
     };
+
+    const handleSignOut = async (e) => {
+        e.preventDefault();
+        try {
+            await magic.user.logout();
+            console.log(await magic.user.isLoggedIn()); // => `false`
+            router.push("/login");
+        } catch (error) {
+            // Handle errors if required!
+            console.error("error logging out email", error);
+            router.push("/login");
+        }
+    }
 
     return (
     <div className={styles.container}>
@@ -45,9 +75,7 @@ const NavBar = (props) => {
                     </button>
                     {showDropdown && (
                     <div className={styles.navDropdown}>
-                        <Link href="/login" legacyBehavior>
-                            <a className={styles.linkName}>Sign out of Netflix</a>
-                        </Link>
+                        <a className={styles.linkName} onClick={handleSignOut}>Sign out of Netflix</a>
                         <div className={styles.lineWrapper}></div>
                     </div>
                     )}
