@@ -32,7 +32,7 @@ export default function Home({ disneyVideos,
         <div className={styles.main}>
           <NavBar />
           <Banner
-              videoId="VQojqjCKyU8"
+              videoId="4zH5iYM4wJo"
               title='Clifford is the red dog'
               subtitle='He is a smart dog'
               imgUrl='/static/clifford.jpg'
