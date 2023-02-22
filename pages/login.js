@@ -1,30 +1,25 @@
-import {useEffect, useState} from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-
 import styles from "../styles/Login.module.css";
 import { magic } from "../lib/magic-client";
-
 const Login = () => {
     const [email, setEmail] = useState("");
     const [userMsg, setUserMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-
     const router = useRouter();
-
     useEffect(() => {
         const handleComplete = () => {
             setIsLoading(false);
-        }
+        };
         router.events.on("routeChangeComplete", handleComplete);
         router.events.on("routeChangeError", handleComplete);
-
         return () => {
             router.events.off("routeChangeComplete", handleComplete);
             router.events.off("routeChangeError", handleComplete);
-        }
+        };
     }, [router]);
     const handleOnChangeEmail = (e) => {
         setUserMsg("");
@@ -35,28 +30,36 @@ const Login = () => {
     const handleLoginWithEmail = async (e) => {
         console.log("hi button");
         e.preventDefault();
-
-
+        setIsLoading(true);
         if (email) {
-            if (email === "anapaulateston@gmail.com") {
-                //  log in a user by their email
-                try {
-                    setIsLoading(true);
-                    const didToken = await magic.auth.
-                    loginWithMagicLink({
-                        email,
+            // log in a user by their email
+            try {
+                setIsLoading(true);
+
+                const didToken = await magic.auth.loginWithMagicLink({
+                    email,
+                });
+                if (didToken) {
+                    const response = await fetch("/api/login", {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${didToken}`,
+                            "Content-Type": "application/json",
+                        },
                     });
-                    console.log({ didToken });
-                    if (didToken){
+
+                    const loggedInResponse = await response.json();
+                    if (loggedInResponse.done) {
                         router.push("/");
+                    } else {
+                        setIsLoading(false);
+                        setUserMsg("Something went wrong logging in");
                     }
-                } catch (error) {
-                    // Handle errors if required!
-                    console.error("Something went wrong logging in", error);
                 }
-            } else {
+            } catch (error) {
+                // Handle errors if required!
+                console.error("Something went wrong logging in", error);
                 setIsLoading(false);
-                setUserMsg("Something went wrong logging in");
             }
         } else {
             // show user message
