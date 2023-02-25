@@ -6,7 +6,7 @@ import clsx from "classnames";
 import { getYoutubeVideoById } from "../../lib/videos";
 import Like from "../../components/icons/like-icon";
 import DisLike from "../../components/icons/dislike-icon";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 Modal.setAppElement("#__next");
 
@@ -42,6 +42,25 @@ const Video = ({ video }) => {
         statistics: { viewCount } = { viewCount: 0 },
     } = video;
 
+
+    useEffect( () => {
+        const handleLikeDislikeService = async () => {
+            const response = await fetch(`/api/stats?videoId=${videoId}`, {
+                method: "GET",
+            });
+            const data = await response.json();
+
+            if (data.length > 0) {
+                const favourite = data[0].favourite;
+                if (favourite === 1) {
+                    setToggleLike(true);
+                } else if (favourite === 0) {
+                    setToggleDislike(true);
+                }
+            }
+        };
+        handleLikeDislikeService();
+    }, [videoId]);
     const runRatingService = async (favourite) => {
         return await fetch("/api/stats", {
             method: "POST",
