@@ -29,8 +29,11 @@ export async function getStaticPaths() {
     return { paths, fallback: "blocking" };
 }
 const Video = ({ video }) => {
+    const  [ toggleLike, setToggleLike ] = useState(false);
+    const  [ toggleDislike, setToggleDislike ] = useState(false);
+
     const router = useRouter();
-    console.log({ router });
+    const videoId = router.query.videoId
     const {
         title,
         publishTime,
@@ -39,20 +42,42 @@ const Video = ({ video }) => {
         statistics: { viewCount } = { viewCount: 0 },
     } = video;
 
-    const  [ toggleLike, setToggleLike ] = useState(false);
-    const  [ toggleDislike, setToggleDislike ] = useState(false);
+    const runRatingService = async (favourite) => {
+        return await fetch("/api/stats", {
+            method: "POST",
+            body: JSON.stringify({
+                videoId,
+                favourite,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
 
-    const handleToggleLike = () => {
+    const handleToggleLike = async () => {
         console.log("handleToggleLike");
-        setToggleLike(!toggleLike);
+        const val = !toggleLike;
+        setToggleLike(val);
         setToggleDislike(toggleLike);
-    }
 
-    const handleToggleDislike = () => {
+        const favourite = val ? 1 : 0;
+
+        const response = await runRatingService(favourite)
+        console.log("data", await response.json());
+    };
+
+    const handleToggleDislike = async () => {
         console.log("handleToggleDislike");
-        setToggleDislike(!toggleDislike);
+        const val = !toggleDislike;
+        setToggleDislike(val);
         setToggleLike(toggleDislike);
-    }
+
+        const favourite = val ? 0 : 1;
+
+        const response = await runRatingService(favourite);
+        console.log("data", await response.json());
+    };
 
     return (
         <div className={styles.container}>
@@ -70,7 +95,7 @@ const Video = ({ video }) => {
                     type="text/html"
                     width="100%"
                     height="360"
-                    src={`https://www.youtube.com/embed/${router.query.videoId}?autoplay=0&origin=http://example.com&controls=0&rel=1`}
+                    src={`https://www.youtube.com/embed/${videoId}?autoplay=0&origin=http://example.com&controls=0&rel=1`}
                     frameBorder="0"
                 ></iframe>
                 <div className={styles.likeDislikeBtnWrapper}>
