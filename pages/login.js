@@ -10,6 +10,7 @@ const Login = () => {
     const [userMsg, setUserMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
+
     useEffect(() => {
         const handleComplete = () => {
             setIsLoading(false);
@@ -23,12 +24,10 @@ const Login = () => {
     }, [router]);
     const handleOnChangeEmail = (e) => {
         setUserMsg("");
-        console.log("event", e);
         const email = e.target.value;
         setEmail(email);
     };
     const handleLoginWithEmail = async (e) => {
-        console.log("hi button");
         e.preventDefault();
         setIsLoading(true);
         if (email) {

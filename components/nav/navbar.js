@@ -3,29 +3,30 @@ import { useRouter } from "next/router";
 import {useEffect, useState} from "react";
 import Image from "next/legacy/image";
 import {magic} from "../../lib/magic-client";
+import Link from "next/link";
 
 const NavBar = () => {
 
     const [showDropdown, setShowDropdown] = useState();
     const [username, setUsername] = useState("");
+    const [didToken, setDidToken] = useState("");
 
     const router = useRouter();
 
     useEffect(() => {
-        async function getUsername() {
+        const applyUsernameInNav = async () => {
             try {
                 const { email, issuer } = await magic.user.getMetadata();
                 const didToken = await magic.user.getIdToken();
-                console.log({didToken});
                 if (email) {
-                    console.log(email);
                     setUsername(email);
+                    setDidToken(didToken);
                 }
             } catch (error) {
                 console.log("Error retrieving email:", error);
             }
         }
-        getUsername();
+        applyUsernameInNav();
     }, []);
 
     const handleOnClickHome = (e) => {
@@ -45,24 +46,34 @@ const NavBar = () => {
     const handleSignOut = async (e) => {
         e.preventDefault();
         try {
-            await magic.user.logout();
-            console.log(await magic.user.isLoggedIn()); // => `false`
-            router.push("/login");
+            const response = await fetch("/api/logout", {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${didToken}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const res = await response.json();
         } catch (error) {
-            // Handle errors if required!
-            console.error("error logging out email", error);
+            console.error("Error logging out", error);
             router.push("/login");
         }
-    }
+    };
 
     return (
     <div className={styles.container}>
         <div className={styles.wrapper}>
-            <a className={styles.logoLink} href={"/"}>
-                <div className={styles.logoWrapper}>
-                    <Image src={"/static/netflix.svg"} alt={"Netflix logo"} width={128} height={34}/>
-                </div>
-            </a>
+            <Link legacyBehavior className={styles.logoLink} href={"/"}>
+                <a>
+                    <div className={styles.logoWrapper}>
+                        <Image src={"/static/netflix.svg"}
+                               alt={"Netflix logo"}
+                               width={128}
+                               height={34}/>
+                    </div>
+                </a>
+            </Link>
             <ul className={styles.navItems}>
                 <li className={styles.navItem} onClick={handleOnClickHome}>Home</li>
                 <li className={styles.navItem} onClick={handleOnClickMyList}>My List</li>

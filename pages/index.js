@@ -20,7 +20,6 @@ export async function getServerSideProps(context) {
 
   const watchItAgainVideos = await getWatchItAgainVideos(userId, token);
 
-
   const disneyVideos = await getVideos("disney trailer");
   const productivityVideos = await getVideos("productivity");
   const travelVideos = await getVideos("travel");
