@@ -6,11 +6,9 @@ import {magic} from "../../lib/magic-client";
 import Link from "next/link";
 
 const NavBar = () => {
-
-    const [showDropdown, setShowDropdown] = useState();
+    const [showDropdown, setShowDropdown] = useState(false);
     const [username, setUsername] = useState("");
     const [didToken, setDidToken] = useState("");
-
     const router = useRouter();
 
     useEffect(() => {
@@ -23,19 +21,20 @@ const NavBar = () => {
                     setDidToken(didToken);
                 }
             } catch (error) {
-                console.log("Error retrieving email:", error);
+                console.error("Error retrieving email", error);
             }
-        }
+        };
         applyUsernameInNav();
     }, []);
 
     const handleOnClickHome = (e) => {
         e.preventDefault();
-        router.push('/');
+        router.push("/");
     };
+
     const handleOnClickMyList = (e) => {
         e.preventDefault();
-        router.push('/browse/my-list');
+        router.push("/browse/my-list");
     };
 
     const handleShowDropdown = (e) => {
@@ -45,6 +44,7 @@ const NavBar = () => {
 
     const handleSignOut = async (e) => {
         e.preventDefault();
+
         try {
             const response = await fetch("/api/logout", {
                 method: "POST",
